@@ -6,13 +6,13 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 12:55:19 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/16 14:37:01 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:07:08 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFFER_SIZE 10
+# define BUFFER_SIZE 1
 
 # include <unistd.h>
 # include <stdlib.h>

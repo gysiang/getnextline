@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 12:55:01 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/16 13:20:19 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/18 13:00:23 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,69 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		sizetotal;
 	char	*res;
+	int		total_len;
 	int		i;
 	int		j;
 
 	i = 0;
-	sizetotal = ft_strlen(s1) + ft_strlen(s2);
-	res = malloc(sizeof(char) * (sizetotal + 1));
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	res = malloc(sizeof(char) * (total_len + 1));
 	if (!res || !s1 || !s2)
 		return (NULL);
-	while (s1[i] != 0)
+	while (s1[i] != '\0')
 	{
 		res[i] = s1[i];
 		i++;
 	}
 	j = 0;
-	while (s2[j] != 0)
+	while (s2[j] != '\0')
 	{
 		res[i] = s2[j];
 		i++;
 		j++;
 	}
-	res[sizetotal] = 0;
+	res[total_len] = '\0';
 	return (res);
 }
 
-char	*ft_strchr(const char *string, int searchedChar )
+char	*ft_strdup(const char *s)
 {
-	char	*str;
-
-	str = (char *)string;
-	while (*str != searchedChar && *str != 0)
-		str++;
-	if (*str == searchedChar)
-		return (str);
-	else
-		return (NULL);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	char	*str;
+	char	*p;
+	size_t	len;
 	size_t	i;
 
-	str = (char *)s;
 	i = 0;
-	while (i < n)
+	len = ft_strlen(s);
+	p = (char *)malloc(len + 1);
+	if (!p)
+		return (NULL);
+	while (s[i] != '\0')
 	{
-		str[i] = '\0';
+		p[i] = s[i];
 		i++;
 	}
+	p[i] = '\0';
+	return (p);
 }
 
-void	*ft_calloc(size_t elementCount, size_t elementSize)
+char	*ft_strchr(const char *str, int c)
 {
-	char	*res;
-
-	res = malloc(elementSize * elementCount);
-	if (!res)
-		return (NULL);
-	ft_bzero(res, elementSize * elementCount);
-	return (res);
+	while (*str != '\0' && *str != (char)c)
+		++str;
+	if (*str == (char)c)
+		return ((char *)str);
+	return (NULL);
 }
 
-size_t	ft_strlen(const char *theString)
+size_t	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (s == NULL)
+		return (0);
 	i = 0;
-	while (theString[i])
+	while (s[i] != '\0')
 		i++;
 	return (i);
 }
