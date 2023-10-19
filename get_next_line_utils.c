@@ -19,10 +19,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
+	if (!s1 || !s2)
+		return (NULL);
 	i = 0;
 	total_len = ft_strlen(s1) + ft_strlen(s2);
 	res = malloc(sizeof(char) * (total_len + 1));
-	if (!res || !s1 || !s2)
+	if (!res)
 		return (NULL);
 	while (s1[i] != '\0')
 	{

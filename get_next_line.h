@@ -6,13 +6,20 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 12:55:19 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/18 15:07:08 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/19 11:15:27 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
+# ifndef BUFFER_SIZE
 # define BUFFER_SIZE 1
+# endif
+
+# ifndef MAX_FILES_OPEN
+# define MAX_FILES_OPEN 10
+# endif
 
 # include <unistd.h>
 # include <stdlib.h>
