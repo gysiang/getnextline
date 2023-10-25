@@ -6,12 +6,11 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:30:47 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/20 17:27:41 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/25 12:57:26 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <string.h>
 
 static char	*ft_free(char *s)
 {
@@ -23,56 +22,45 @@ static char	*ft_free(char *s)
 static char	*extract_line(char *buffer)
 {
 	char	*line;
-	int		len;
 	int		i;
+	int		len;
 
 	if (buffer == NULL || *buffer == '\0')
 		return (NULL);
-	len = 0;
-	while (buffer[len] != '\n')
-		len++;;
+	len = ft_strlen(buffer);
 	i = 0;
-	line = (char *)malloc(sizeof(char) * (len + 2));
-	if (!line)
-		return (NULL);
-	while (buffer[i] != '\n' && buffer[i] != '\0')
+	line = (char *)malloc(len + 2);
+	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
 		i++;
 	}
 	if (buffer[i] == '\n')
-	{
-		line[i] = '\n';
-		i++;
-	}
+		line[i++] = '\n';
 	line[i] = '\0';
-	return (line);
+	return (line);	
 }
 
 static	char	*ft_nextchunk(char *buffer, size_t len)
 {
-	char	*result;
+	char	*res;
 	int		i;
 	size_t	buffer_len;
-	size_t	len_to_copy;
+	size_t	len_to_copy;	
 
-	if (!buffer || len == 0)
+	if (!buffer || len <= 0)
 		return (NULL);
 	i = 0;
 	buffer_len = ft_strlen(buffer);
 	len_to_copy = buffer_len - len + 1;
-	if (len_to_copy <= 0)
-		return (NULL);
-	result = (char *)malloc(sizeof(char) * len_to_copy + 1);
-	if (!result)
-		return (NULL);
+	res = (char *)malloc(sizeof(char) * len_to_copy);
 	while (buffer[len + i] != '\0')
 	{
-		result[i] = buffer[len + i];
+		res[i] = buffer[len + i];
 		i++;
 	}
-	result[i] = '\0';
-	return (result);
+	res[i] = '\0';
+	return (res);
 }
 
 char	*read_file(int fd, char *text)
@@ -82,45 +70,35 @@ char	*read_file(int fd, char *text)
 	ssize_t	bytes_read;
 
 	res = (char *)malloc(BUFFER_SIZE + 1);
-	if (res == NULL)
-		return (ft_free(text));
-	if (text[strlen(text) - 1] != '\0')
-	{
-		text[strlen(text) - 1] = '\0';
-	} 
 	bytes_read = 1;
-	while (bytes_read >= 1)
+	while (ft_strchr(text, '\n') == NULL)
 	{
 		bytes_read = read(fd, res, BUFFER_SIZE);
 		if (bytes_read <= 0)
 			break ;
-		res[bytes_read] = '\0';
+		res[bytes_read] = 0;
+		text = check_null(text);
 		tmp = ft_strjoin(text, res);
 		ft_free(text);
 		text = tmp;
 	}
 	free(res);
+	if (bytes_read < 0)
+		return (ft_free(text));
 	return (text);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*buffer = NULL;
-	char		*line;
+	char	*line;
 
-	if (BUFFER_SIZE < 1 || fd < 0 || fd > MAX_FILES_OPEN)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (!buffer)
+	if (buffer == NULL)
 		buffer = (char *)malloc(sizeof(char) * 1);
 	buffer = read_file(fd, buffer);
-	if (!buffer)
-		return (ft_free(buffer));
 	line = extract_line(buffer);
-	if (line == NULL)
-	{
-		buffer = ft_free(buffer);
-		return (ft_free(line));
-	}
 	buffer = ft_nextchunk(buffer, ft_strlen(line));
 	return (line);
 }
@@ -139,4 +117,5 @@ int	main(void)
 			return (0);
 		printf("LINE %d: %s",i++, line);	
 	}
+	close(fd);
 }

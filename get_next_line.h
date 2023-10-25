@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 12:55:19 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/19 11:15:27 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/25 12:07:23 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,13 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <stddef.h>
+# include <string.h>
 
 char	*get_next_line(int fd);
-char	*ft_strchr(const char	*str, int c);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strdup(const char *s);
-size_t		ft_strlen(const char *str);
+char	*ft_strchr(char	*str, int c);
+char	*ft_strjoin(char *s1, char  *s2);
+char	*ft_strdup(char *s);
+char	*check_null(char *s);
+size_t		ft_strlen(char *str);
 
 #endif
