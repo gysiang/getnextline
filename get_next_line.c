@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:30:47 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/25 12:57:26 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:58:12 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@ static char	*extract_line(char *buffer)
 	int		i;
 	int		len;
 
-	if (buffer == NULL || *buffer == '\0')
+	if (buffer == NULL)
 		return (NULL);
-	len = ft_strlen(buffer);
 	i = 0;
-	line = (char *)malloc(len + 2);
+	len = 0;
+	while (buffer[len] && buffer[len] != '\n')
+		len++;
+	line = (char *)malloc(sizeof(char) * (len + 2));
+	if (!line)
+		return (NULL);
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
@@ -54,6 +58,8 @@ static	char	*ft_nextchunk(char *buffer, size_t len)
 	buffer_len = ft_strlen(buffer);
 	len_to_copy = buffer_len - len + 1;
 	res = (char *)malloc(sizeof(char) * len_to_copy);
+	if (!res)
+		return (NULL);
 	while (buffer[len + i] != '\0')
 	{
 		res[i] = buffer[len + i];
@@ -69,40 +75,55 @@ char	*read_file(int fd, char *text)
 	char	*tmp;
 	ssize_t	bytes_read;
 
-	res = (char *)malloc(BUFFER_SIZE + 1);
+	if (!text)
+		return (NULL);
+	res = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!res)
+		return (NULL);
 	bytes_read = 1;
-	while (ft_strchr(text, '\n') == NULL)
+	while (bytes_read >= 1)
 	{
 		bytes_read = read(fd, res, BUFFER_SIZE);
-		if (bytes_read <= 0)
+		if (bytes_read < 0)
 			break ;
-		res[bytes_read] = 0;
-		text = check_null(text);
+		res[bytes_read] = '\0';
 		tmp = ft_strjoin(text, res);
 		ft_free(text);
 		text = tmp;
 	}
 	free(res);
 	if (bytes_read < 0)
-		return (ft_free(text));
+		return (ft_free(res));
 	return (text);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer = NULL;
+	static char	*buffer;
 	char	*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (buffer == NULL)
+	if (!buffer)
+	{
 		buffer = (char *)malloc(sizeof(char) * 1);
+		if (!buffer)
+			return (NULL);
+		*buffer = '\0';
+	}
 	buffer = read_file(fd, buffer);
+	if (!buffer)
+		return (ft_free(buffer));
 	line = extract_line(buffer);
+	if (!line || !line[0])
+	{
+		ft_free(buffer);
+		return (ft_free(line));
+	} 
 	buffer = ft_nextchunk(buffer, ft_strlen(line));
 	return (line);
 }
-
+/*
 int	main(void)
 {
 	char	*line = NULL;
@@ -115,7 +136,8 @@ int	main(void)
 		line = get_next_line(fd);
 		if (line == NULL)
 			return (0);
-		printf("LINE %d: %s",i++, line);	
+		printf("LINE %d: %s",i++, line);
+		free(line);	
 	}
 	close(fd);
-}
+} */
