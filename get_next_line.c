@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:30:47 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/29 12:55:21 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/29 14:45:24 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*read_file(int fd, char *text)
 	ssize_t	bytes_read;
 
 	if (!text || !text[0])
-		return (NULL);
+		return (ft_free(text));
 	res = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!res)
 		return (NULL);
@@ -111,10 +111,13 @@ char	*get_next_line(int fd)
 		*buffer = '\0';
 	}
 	buffer = read_file(fd, buffer);
-	if (!buffer)
-		return (ft_free(buffer));
+	if (!buffer || buffer[0] == '\0')
+	{
+		ft_free(buffer);
+		return (NULL);
+	}
 	line = extract_line(buffer);
-	if (!line || !line[0])
+	if (!line || line[0] == '\0')
 	{
 		ft_free(buffer);
 		return (ft_free(line));
@@ -122,7 +125,7 @@ char	*get_next_line(int fd)
 	buffer = ft_nextchunk(buffer, ft_strlen(line));
 	return (line);
 }
-
+/*
 int	main(void)
 {
 	char	*line = NULL;
@@ -139,4 +142,4 @@ int	main(void)
 		free(line);	
 	}
 	close(fd);
-}
+} */
