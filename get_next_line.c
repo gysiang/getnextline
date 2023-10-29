@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:30:47 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/26 17:58:12 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/29 12:55:21 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static	char	*ft_nextchunk(char *buffer, size_t len)
 		i++;
 	}
 	res[i] = '\0';
+	free(buffer);
 	return (res);
 }
 
@@ -75,7 +76,7 @@ char	*read_file(int fd, char *text)
 	char	*tmp;
 	ssize_t	bytes_read;
 
-	if (!text)
+	if (!text || !text[0])
 		return (NULL);
 	res = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!res)
@@ -92,8 +93,6 @@ char	*read_file(int fd, char *text)
 		text = tmp;
 	}
 	free(res);
-	if (bytes_read < 0)
-		return (ft_free(res));
 	return (text);
 }
 
@@ -123,14 +122,14 @@ char	*get_next_line(int fd)
 	buffer = ft_nextchunk(buffer, ft_strlen(line));
 	return (line);
 }
-/*
+
 int	main(void)
 {
 	char	*line = NULL;
 	int	fd;
 	int	i = 0;
 
-	fd = open("example.txt", O_RDONLY);
+	fd = open("empty.txt", O_RDONLY);
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -140,4 +139,4 @@ int	main(void)
 		free(line);	
 	}
 	close(fd);
-} */
+}
