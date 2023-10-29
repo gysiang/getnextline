@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:30:47 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/10/29 14:45:24 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/10/29 15:58:41 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*read_file(int fd, char *text)
 	char	*tmp;
 	ssize_t	bytes_read;
 
-	if (!text || !text[0])
+	if (!text)
 		return (ft_free(text));
 	res = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!res)
@@ -87,18 +87,20 @@ char	*read_file(int fd, char *text)
 		bytes_read = read(fd, res, BUFFER_SIZE);
 		if (bytes_read < 0)
 			break ;
-		res[bytes_read] = '\0';
+		res[bytes_read] = 0;
 		tmp = ft_strjoin(text, res);
 		ft_free(text);
 		text = tmp;
 	}
 	free(res);
+	if (bytes_read < 0 || !text[0])
+		return (ft_free(text));
 	return (text);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer = NULL;
 	char	*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
@@ -112,16 +114,13 @@ char	*get_next_line(int fd)
 	}
 	buffer = read_file(fd, buffer);
 	if (!buffer || buffer[0] == '\0')
-	{
-		ft_free(buffer);
-		return (NULL);
-	}
+		return (ft_free(buffer));
 	line = extract_line(buffer);
 	if (!line || line[0] == '\0')
 	{
 		ft_free(buffer);
 		return (ft_free(line));
-	} 
+	}
 	buffer = ft_nextchunk(buffer, ft_strlen(line));
 	return (line);
 }
@@ -132,14 +131,14 @@ int	main(void)
 	int	fd;
 	int	i = 0;
 
-	fd = open("empty.txt", O_RDONLY);
+	fd = open("example.txt", O_RDONLY);
 	while (1)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
 			return (0);
 		printf("LINE %d: %s",i++, line);
-		free(line);	
+		free(line);
 	}
 	close(fd);
 } */
